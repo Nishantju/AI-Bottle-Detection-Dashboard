@@ -272,7 +272,7 @@ def process_mobile_image(image_path):
         images={
             "image": image_path
         },
-        use_cache=True
+        use_cache=False
     )
 
 
@@ -332,16 +332,6 @@ def process_mobile_image(image_path):
             3
         )
 
-
-    cv2.putText(
-        frame,
-        f"Bottle {confidence:.2f}",
-        (x1, y1-10),
-        cv2.FONT_HERSHEY_SIMPLEX,
-        0.7,
-        (0,255,0),
-        2
-    )
 
 
     cv2.putText(
