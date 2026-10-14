@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 import time
-import base64
+
 from cameras.manager import start_camera as manager_start
 from cameras.manager import stop_camera as manager_stop
 
@@ -355,17 +355,6 @@ def process_mobile_image(image_path):
         )
 
 
-    # Encode image for browser
-    success, buffer = cv2.imencode(
-        ".jpg",
-        frame
-    )
-
-
-    encoded_image = base64.b64encode(
-        buffer
-    ).decode()
-
 
 
     latest_status["count"] = len(last_predictions)
@@ -389,7 +378,7 @@ def process_mobile_image(image_path):
 
 
     return {
-        "image": "data:image/jpeg;base64," + encoded_image,
+        "predictions": last_predictions,
         "status": latest_status["status"],
         "confidence": latest_status["confidence"],
         "count": latest_status["count"]

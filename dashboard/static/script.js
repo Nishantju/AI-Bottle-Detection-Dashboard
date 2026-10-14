@@ -6,6 +6,11 @@
 
         const mobileCamera =
             document.getElementById("mobileCamera");
+        const mobileOverlay =
+            document.getElementById("mobileOverlay");
+
+        const overlayContext =
+            mobileOverlay.getContext("2d");
 
         const liveIndicator = document.getElementById("liveIndicator");
         const liveLabel = document.getElementById("liveLabel");
@@ -133,9 +138,12 @@
 
                         mobileCamera.hidden = false;
 
-                        cameraFeed.hidden = false;
+                        cameraFeed.hidden = true;
 
                         feedPlaceholder.hidden = true;
+
+                        mobileOverlay.hidden = false;
+
 
                         setCameraState(true);
 
@@ -257,11 +265,9 @@
                 const result = await response.json();
 
 
-                if(result.success){
+                if (result.success) {
 
-                    cameraFeed.hidden=false;
-                    feedPlaceholder.hidden=true;
-                    cameraFeed.src=result.image;
+                    drawMobileBoxes(result.predictions);
 
                 }
 
@@ -280,6 +286,79 @@
 
         }
 
+        function drawMobileBoxes(predictions) {
+
+            if (!mobileCamera.videoWidth) {
+                return;
+            }
+
+
+            mobileOverlay.width = mobileCamera.clientWidth;
+            mobileOverlay.height = mobileCamera.clientHeight;
+
+
+            overlayContext.clearRect(
+                0,
+                0,
+                mobileOverlay.width,
+                mobileOverlay.height
+            );
+
+
+            const scaleX =
+                mobileCamera.clientWidth /
+                mobileCamera.videoWidth;
+
+            const scaleY =
+                mobileCamera.clientHeight /
+                mobileCamera.videoHeight;
+
+
+            predictions.forEach(pred => {
+
+
+                const x =
+                    (pred.x - pred.width / 2) * scaleX;
+
+                const y =
+                    (pred.y - pred.height / 2) * scaleY;
+
+
+                const w =
+                    pred.width * scaleX;
+
+                const h =
+                    pred.height * scaleY;
+
+
+                overlayContext.strokeStyle = "lime";
+                overlayContext.lineWidth = 3;
+
+
+                overlayContext.strokeRect(
+                    x,
+                    y,
+                    w,
+                    h
+                );
+
+
+                overlayContext.fillStyle = "lime";
+                overlayContext.font = "18px Arial";
+
+
+                overlayContext.fillText(
+                    "Bottle " +
+                    (pred.confidence * 100).toFixed(1) +
+                    "%",
+                    x,
+                    y - 5
+                );
+
+            });
+
+        }
+
 
 
         async function stopCamera() {
@@ -294,6 +373,16 @@
                 mobileCamera.srcObject = null;
 
                 mobileCamera.hidden = true;
+
+                mobileOverlay.hidden = true;
+
+                overlayContext.clearRect(
+                    0,
+                    0,
+                    mobileOverlay.width,
+                    mobileOverlay.height
+                );
+
             }   
 
 

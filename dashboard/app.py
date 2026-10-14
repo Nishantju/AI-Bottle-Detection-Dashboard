@@ -230,7 +230,7 @@ def mobile_frame():
 
     return {
         "success": True,
-        "image": result["image"],
+        "predictions": result["predictions"],
         "status": result["status"],
         "confidence": result["confidence"],
         "count": result["count"]
