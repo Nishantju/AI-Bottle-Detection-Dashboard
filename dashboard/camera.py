@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 import time
-
+import base64
 from cameras.manager import start_camera as manager_start
 from cameras.manager import stop_camera as manager_stop
 
@@ -235,8 +235,12 @@ print("Camera released")
 
 
 def process_mobile_image(image_path):
+
     global last_predictions
     global latest_status
+
+    frame = cv2.imread(image_path)
+
 
     result = client.run_workflow(
         workspace_name="nishant-kumar-sdkzt",
@@ -250,6 +254,7 @@ def process_mobile_image(image_path):
         use_cache=True
     )
 
+
     if result and isinstance(result, list):
 
         output = result[0]
@@ -258,6 +263,7 @@ def process_mobile_image(image_path):
 
         predictions = prediction_data.get("predictions", [])
 
+
         last_predictions = [
             p for p in predictions
             if p.get("confidence", 0) > 0.70
@@ -265,9 +271,66 @@ def process_mobile_image(image_path):
         ]
 
     else:
+
         last_predictions = []
 
+
+
+    # Draw green boxes
+    for pred in last_predictions:
+
+        x = int(pred["x"])
+        y = int(pred["y"])
+        w = int(pred["width"])
+        h = int(pred["height"])
+
+        confidence = pred["confidence"]
+
+
+        cv2.rectangle(
+            frame,
+            (
+                x - w // 2,
+                y - h // 2
+            ),
+            (
+                x + w // 2,
+                y + h // 2
+            ),
+            (0,255,0),
+            3
+        )
+
+
+        cv2.putText(
+            frame,
+            f"Bottle {confidence:.2f}",
+            (
+                x - w // 2,
+                y - h // 2 - 10
+            ),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0,255,0),
+            2
+        )
+
+
+    # Encode image for browser
+    success, buffer = cv2.imencode(
+        ".jpg",
+        frame
+    )
+
+
+    encoded_image = base64.b64encode(
+        buffer
+    ).decode()
+
+
+
     latest_status["count"] = len(last_predictions)
+
 
     if last_predictions:
 
@@ -284,4 +347,11 @@ def process_mobile_image(image_path):
 
         latest_status["confidence"] = 0
 
-    return latest_status
+
+
+    return {
+        "image": "data:image/jpeg;base64," + encoded_image,
+        "status": latest_status["status"],
+        "confidence": latest_status["confidence"],
+        "count": latest_status["count"]
+    }

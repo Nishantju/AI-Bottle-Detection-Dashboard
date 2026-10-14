@@ -1,4 +1,7 @@
 
+import cv2
+import numpy as np
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -211,6 +214,7 @@ def mobile_frame():
             "message": "No image received"
         }, 400
 
+
     image = image.split(",")[1]
 
     image_bytes = base64.b64decode(image)
@@ -220,10 +224,13 @@ def mobile_frame():
     with open(image_path, "wb") as f:
         f.write(image_bytes)
 
+
     result = process_mobile_image(image_path)
+
 
     return {
         "success": True,
+        "image": result["image"],
         "status": result["status"],
         "confidence": result["confidence"],
         "count": result["count"]
