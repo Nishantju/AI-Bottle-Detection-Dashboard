@@ -16,6 +16,7 @@
         let progressValue = 0;
         let cancelRequested = false;
         let mobileCaptureInterval = null;
+        let mobileProcessing = false;
 
         function setCameraState(running) {
             cameraRunning = running;
@@ -149,7 +150,7 @@
 
                                 captureMobileFrame();
 
-                            }, 1000);
+                            }, 2000);
 
                         };
 
@@ -204,12 +205,15 @@
 
         function captureMobileFrame() {
 
-            const canvas = document.getElementById("captureCanvas");
+            if (mobileProcessing) {
+                return;
+            }
 
+            const canvas = document.getElementById("captureCanvas");
             const video = document.getElementById("mobileCamera");
 
             if (video.videoWidth === 0 || video.videoHeight === 0) {
-                return null;
+                return;
             }
 
             canvas.width = video.videoWidth;
@@ -217,31 +221,34 @@
 
             const ctx = canvas.getContext("2d");
 
-            ctx.drawImage(video, 0, 0);
+            ctx.drawImage(video,0,0);
 
-            const imageData = canvas.toDataURL("image/jpeg", 0.8);
+            const imageData = canvas.toDataURL(
+                "image/jpeg",
+                0.8
+            );
 
             sendMobileFrame(imageData);
-
-            return imageData;
         }
 
 
 
         async function sendMobileFrame(imageData) {
 
+            mobileProcessing = true;
+
             try {
 
                 const response = await fetch("/mobile_frame", {
 
-                    method: "POST",
+                    method:"POST",
 
-                    headers: {
-                        "Content-Type": "application/json"
+                    headers:{
+                        "Content-Type":"application/json"
                     },
 
-                    body: JSON.stringify({
-                        image: imageData
+                    body:JSON.stringify({
+                        image:imageData
                     })
 
                 });
@@ -249,21 +256,25 @@
 
                 const result = await response.json();
 
-                if (result.success) {
 
-                    cameraFeed.hidden = false;
-                    feedPlaceholder.hidden = true;
+                if(result.success){
 
-                    cameraFeed.src = result.image;
-
-                    mobileCamera.hidden = true;
+                    cameraFeed.hidden=false;
+                    feedPlaceholder.hidden=true;
+                    cameraFeed.src=result.image;
 
                 }
 
 
-            } catch (error) {
+            }
+            catch(error){
 
                 console.error(error);
+
+            }
+            finally{
+
+                mobileProcessing=false;
 
             }
 
