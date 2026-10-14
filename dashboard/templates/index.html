@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1119">
+    <title>AI Bottle Detection System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-page">
+    <header class="topbar">
+        <div class="brand">
+            <img class="brand-logo" src="{{ url_for('static', filename='logo1.png') }}" alt="Bottle inspection logo">
+        </div>
+        <nav class="menu" aria-label="Main navigation">
+            <a class="active"
+            href="/"
+            aria-current="page"
+            onclick="return navigatePage('/')">
+            Live monitoring
+            </a>
+
+            <a href="/history"
+            onclick="return navigatePage('/history')">
+            History
+            </a>
+
+            <a href="/analytics"
+            onclick="return navigatePage('/analytics')">
+            Analytics
+            </a>
+        </nav>
+        <nav class="social-links" aria-label="Social profiles">
+            <a class="social-link" href="https://www.linkedin.com/in/nishant40dev" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2ZM8.34 18H5.67V9.42h2.67ZM7 8.25a1.55 1.55 0 1 1 .02-3.1A1.55 1.55 0 0 1 7 8.25ZM18.33 18h-2.66v-4.17c0-1-.02-2.29-1.4-2.29s-1.62 1.1-1.62 2.22V18H10V9.42h2.55v1.17h.04a2.8 2.8 0 0 1 2.52-1.39c2.7 0 3.22 1.78 3.22 4.1Z"/>
+                </svg>
+            </a>
+            <a class="social-link" href="https://github.com/Nishantju" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.29-1.24-1.63-1.24-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.85 2.27 3.73 1.6.1-.71.39-1.2.7-1.48-2.47-.28-5.07-1.24-5.07-5.5 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.12-1.45 3.05-1.15 3.05-1.15.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.27-2.6 5.21-5.08 5.49.4.35.75 1.02.75 2.06v3.05c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/>
+                </svg>
+            </a>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <section class="page-heading">
+            <div class="page-heading-copy">
+                <p class="eyebrow">OPERATIONS / LIVE VIEW</p>
+                <h1>Bottle Detection System</h1>
+                <p class="subtitle">Real-time vision monitoring</p>
+            </div>
+            <div class="system-chip" id="systemChip">
+                <span class="indicator yellow" id="systemIndicator"></span>
+                <span id="systemText">System standby</span>
+            </div>
+        </section>
+
+        <div class="monitor-layout">
+            <section class="camera card-surface" aria-label="Live camera feed">
+                <div class="section-heading camera-heading">
+                    <div>
+                        <p class="eyebrow">CAMERA 01</p>
+                        <h2>Live camera feed</h2>
+                    </div>
+                    <span class="live-badge"><span class="indicator red" id="liveIndicator"></span><span id="liveLabel">OFFLINE</span></span>
+                </div>
+
+                <div class="feed-frame" id="feedFrame">
+                    <img id="cameraFeed"
+                        alt=""
+                        style="width:100%; height:100%; object-fit:contain;">
+                    
+                    <video
+                        id="mobileCamera"
+                        autoplay
+                        playsinline
+                        muted
+                        hidden
+                        style="width:100%; height:100%; object-fit:contain;">
+                    </video>
+
+
+                    <canvas
+                        id="captureCanvas"
+                        hidden>
+                    </canvas>
+
+
+
+                    <div class="feed-placeholder" id="feedPlaceholder">
+                        <span class="camera-placeholder-icon" aria-hidden="true">⌁</span>
+                        <strong>Camera feed is offline</strong>
+                        <span>Start the camera to begin live inspection.</span>
+                    </div>
+                    <div class="feed-overlay">
+                        <span>CAM 01</span>
+                        <span id="feedClock">--:--:--</span>
+                    </div>
+                </div>
+
+                <div class="controls">
+
+
+                    <div class="camera-selector">
+                        <label for="cameraSource">Camera Source</label>
+
+                        <select id="cameraSource" onchange="changeCameraSource()">
+
+                            <option value="webcam" selected>
+                                💻 Laptop Webcam
+                            </option>
+
+                            <option value="mobile">
+                                📱 Mobile Browser
+                            </option>
+
+                            <option value="droidcam">
+                                📷 DroidCam
+                            </option>
+
+                            <option value="ipcamera">
+                                🌐 IP Camera
+                            </option>
+
+                        </select>
+                    </div>
+
+
+
+                    <button class="button button-primary" id="startButton" type="button" onclick="startCamera()">
+                        <span aria-hidden="true">▶</span> Start camera
+                    </button>
+                    <button class="button button-secondary" id="stopButton" type="button" onclick="stopCamera()" disabled>
+                        <span aria-hidden="true">■</span> Stop camera
+                    </button>
+                    <input type="file" id="fileInput" accept="image/*" hidden onchange="uploadFile()">
+                    <button class="button button-quiet" type="button" onclick="chooseFile()">
+                        <span aria-hidden="true">＋</span> Choose image
+                    </button>
+                </div>
+            </section>
+
+            <aside class="status-panel" aria-label="Detection status">
+                <section class="card-surface detection-card" id="detectionCard">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">CURRENT INSPECTION</p>
+                            <h2>Detection status</h2>
+                        </div>
+                        <span class="status-dot yellow" id="statusIndicator" aria-label="No bottle detected"></span>
+                    </div>
+                    <div class="detection-content">
+                        <div class="bottle-visual" id="bottleVisual" aria-hidden="true">
+                            <svg viewBox="0 0 72 112" role="img">
+                                <path d="M27 5h18v13l7 8v9l8 10v55a7 7 0 0 1-7 7H19a7 7 0 0 1-7-7V45l8-10v-9l7-8V5Z"/>
+                                <path class="bottle-neck" d="M27 5h18v13H27z"/>
+                                <path class="bottle-label" d="M17 52h38v28H17z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <span class="metric-label">BOTTLE STATUS</span>
+                            <p class="detection-status" id="status">No Bottle</p>
+                            <span class="status-caption" id="statusCaption">Waiting for a bottle</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card-surface metric-card">
+                    <div class="metric-icon confidence-icon" aria-hidden="true">◉</div>
+                    <div>
+                        <span class="metric-label">CONFIDENCE</span>
+                        <p class="metric-value" id="confidence">0%</p>
+                    </div>
+                    <span class="indicator yellow" id="confidenceIndicator"></span>
+                </section>
+
+                <section class="card-surface metric-card">
+                    <div class="metric-icon count-icon" aria-hidden="true">▤</div>
+                    <div>
+                        <span class="metric-label">BOTTLES IN FRAME</span>
+                        <p class="metric-value" id="count">0</p>
+                    </div>
+                    <span class="indicator yellow" id="countIndicator"></span>
+                </section>
+
+                <section class="card-surface system-card">
+                    <span class="system-icon" aria-hidden="true">⌘</span>
+                    <div>
+                        <span class="metric-label">INSPECTION SYSTEM</span>
+                        <p class="system-value" id="systemCardText">Standby</p>
+                    </div>
+                    <span class="indicator yellow" id="systemCardIndicator"></span>
+                </section>
+            </aside>
+        </div>
+        <footer class="footer">FLASK <span>•</span> OPENCV <span>•</span> ROBOFLOW <span>•</span> YOLO26</footer>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </div>
+</body>
+</html>

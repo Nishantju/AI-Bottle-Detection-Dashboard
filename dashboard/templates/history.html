@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detection History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="legacy-dashboard">
+<header class="topbar">
+    <div class="brand">
+        <img class="brand-logo" src="{{ url_for('static', filename='logo1.png') }}" alt="Bottle inspection logo">
+    </div>
+    <nav class="menu" aria-label="Main navigation">
+        <a href="/">Live monitoring</a>
+        <a class="active" href="/history" aria-current="page">History</a>
+        <a href="/analytics">Analytics</a>
+    </nav>
+    <nav class="social-links" aria-label="Social profiles">
+        <a class="social-link" href="https://www.linkedin.com/in/nishant40dev" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2ZM8.34 18H5.67V9.42h2.67ZM7 8.25a1.55 1.55 0 1 1 .02-3.1A1.55 1.55 0 0 1 7 8.25ZM18.33 18h-2.66v-4.17c0-1-.02-2.29-1.4-2.29s-1.62 1.1-1.62 2.22V18H10V9.42h2.55v1.17h.04a2.8 2.8 0 0 1 2.52-1.39c2.7 0 3.22 1.78 3.22 4.1Z"/>
+            </svg>
+        </a>
+        <a class="social-link" href="https://github.com/Nishantju" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.29-1.24-1.63-1.24-1.63-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.85 2.27 3.73 1.6.1-.71.39-1.2.7-1.48-2.47-.28-5.07-1.24-5.07-5.5 0-1.22.44-2.22 1.15-3-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.12-1.45 3.05-1.15 3.05-1.15.61 1.54.23 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.27-2.6 5.21-5.08 5.49.4.35.75 1.02.75 2.06v3.05c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/>
+            </svg>
+        </a>
+    </nav>
+</header>
+
+<main class="dashboard-main">
+    <section class="page-heading">
+        <div>
+            <p class="eyebrow">OPERATIONS / HISTORY</p>
+            <h1>Detection History</h1>
+        </div>
+    </section>
+    <div class="container">
+
+<table border="1" width="100%">
+    <tr>
+        <th>ID</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Confidence</th>
+        <th>Bottle Count</th>
+    </tr>
+
+    {% for row in detections %}
+
+    <tr>
+        <td>{{ row[0] }}</td>
+        <td>{{ row[1] }}</td>
+        <td>{{ row[2] }}</td>
+        <td>{{ row[3] }} %</td>
+        <td>{{ row[4] }}</td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+</div>
+</main>
+
+
+<div class="footer">
+    Flask • OpenCV • Roboflow • YOLO26 • SQLite
+</div>
+
+</body>
+</html>
