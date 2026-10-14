@@ -132,7 +132,7 @@
 
                         mobileCamera.hidden = false;
 
-                        cameraFeed.hidden = true;
+                        cameraFeed.hidden = false;
 
                         feedPlaceholder.hidden = true;
 
@@ -241,16 +241,25 @@
                     },
 
                     body: JSON.stringify({
-
                         image: imageData
-
                     })
 
                 });
 
+
                 const result = await response.json();
 
-                console.log(result);
+                if (result.success) {
+
+                    cameraFeed.hidden = false;
+                    feedPlaceholder.hidden = true;
+
+                    cameraFeed.src = result.image;
+
+                    mobileCamera.hidden = true;
+
+                }
+
 
             } catch (error) {
 
