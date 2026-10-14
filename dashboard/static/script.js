@@ -267,7 +267,19 @@
 
                 if (result.success) {
 
+
+                    // always clear old box first
+                    overlayContext.clearRect(
+                        0,
+                        0,
+                        mobileOverlay.width,
+                        mobileOverlay.height
+                    );
+
+
+                    // draw only current prediction
                     drawMobileBoxes(result.predictions);
+
 
                 }
 
@@ -276,6 +288,14 @@
             catch(error){
 
                 console.error(error);
+
+                // remove stale box on error
+                overlayContext.clearRect(
+                    0,
+                    0,
+                    mobileOverlay.width,
+                    mobileOverlay.height
+                );
 
             }
             finally{
@@ -293,8 +313,12 @@
             }
 
 
-            mobileOverlay.width = mobileCamera.clientWidth;
-            mobileOverlay.height = mobileCamera.clientHeight;
+            const videoWidth = mobileCamera.videoWidth;
+            const videoHeight = mobileCamera.videoHeight;
+
+
+            mobileOverlay.width = videoWidth;
+            mobileOverlay.height = videoHeight;
 
 
             overlayContext.clearRect(
@@ -305,34 +329,25 @@
             );
 
 
-            const scaleX =
-                mobileCamera.clientWidth /
-                mobileCamera.videoWidth;
-
-            const scaleY =
-                mobileCamera.clientHeight /
-                mobileCamera.videoHeight;
-
-
             predictions.forEach(pred => {
 
 
                 const x =
-                    (pred.x - pred.width / 2) * scaleX;
+                    pred.x - pred.width / 2;
 
                 const y =
-                    (pred.y - pred.height / 2) * scaleY;
+                    pred.y - pred.height / 2;
 
 
                 const w =
-                    pred.width * scaleX;
+                    pred.width;
 
                 const h =
-                    pred.height * scaleY;
+                    pred.height;
 
 
                 overlayContext.strokeStyle = "lime";
-                overlayContext.lineWidth = 3;
+                overlayContext.lineWidth = 5;
 
 
                 overlayContext.strokeRect(
@@ -344,7 +359,7 @@
 
 
                 overlayContext.fillStyle = "lime";
-                overlayContext.font = "18px Arial";
+                overlayContext.font = "30px Arial";
 
 
                 overlayContext.fillText(
@@ -352,7 +367,7 @@
                     (pred.confidence * 100).toFixed(1) +
                     "%",
                     x,
-                    y - 5
+                    y - 10
                 );
 
             });
