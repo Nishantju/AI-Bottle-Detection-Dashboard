@@ -29,6 +29,7 @@ latest_status = {
 
 latest_frame = None
 frame_lock = threading.Lock()
+prediction_lock = threading.Lock()
 worker_running = False
 last_saved_status = None
 
@@ -115,12 +116,15 @@ def inference_worker():
 
             predictions = prediction_data.get("predictions", [])
 
-            last_predictions = [
-                pred
-                for pred in predictions
-                if pred.get("confidence", 0) > 0.70
-                and pred.get("class", "").lower() == "bottles"
-            ]
+            with prediction_lock:
+                last_predictions = [
+                    pred
+                    for pred in predictions
+                    if pred.get("confidence", 0) > 0.70
+                    and pred.get("class", "").lower() == "bottles"
+                ]
+            print("filtered box data")
+            print(last_predictions)
 
         else:
             last_predictions = []
@@ -173,7 +177,8 @@ def generate_frames():
         frame_counter += 1
 
 
-        predictions = last_predictions
+        with prediction_lock:
+            predictions = last_predictions.copy()
         latest_status["count"] = len(predictions)
 
         if len(predictions) > 0:
@@ -188,6 +193,7 @@ def generate_frames():
         print(latest_status)
 
         if latest_status["status"] != last_saved_status:
+
             save_detection(
                 latest_status["status"],
                 latest_status["confidence"],
@@ -196,28 +202,40 @@ def generate_frames():
 
             last_saved_status = latest_status["status"]
 
+
+        # DRAW BOX EVERY FRAME
         for pred in predictions:
-            x = int(pred["x"])
-            y = int(pred["y"])
-            w = int(pred["width"])
-            h = int(pred["height"])
-            confidence = pred["confidence"]
+
+            x = int(pred.get("x", 0))
+            y = int(pred.get("y", 0))
+
+            w = int(pred.get("width", 0))
+            h = int(pred.get("height", 0))
+
+            confidence = pred.get("confidence", 0)
+
+            x1 = int(x - w / 2)
+            y1 = int(y - h / 2)
+
+            x2 = int(x + w / 2)
+            y2 = int(y + h / 2)
+
 
             cv2.rectangle(
                 frame,
-                (x - w // 2, y - h // 2),
-                (x + w // 2, y + h // 2),
-                (0, 255, 0),
-                2
+                (x1, y1),
+                (x2, y2),
+                (0,255,0),
+                3
             )
 
             cv2.putText(
                 frame,
                 f"Bottle {confidence:.2f}",
-                (x - w // 2, y - h // 2 - 10),
+                (x1, y1-10),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
-                (0, 255, 0),
+                0.7,
+                (0,255,0),
                 2
             )
 
@@ -271,6 +289,7 @@ def process_mobile_image(image_path):
         ]
 
     else:
+        predictions = []
 
         last_predictions = []
 
@@ -279,30 +298,50 @@ def process_mobile_image(image_path):
     # Draw green boxes
     for pred in last_predictions:
 
-        x = int(pred["x"])
-        y = int(pred["y"])
-        w = int(pred["width"])
-        h = int(pred["height"])
+        x = int(pred.get("x", 0))
+        y = int(pred.get("y", 0))
 
-        confidence = pred["confidence"]
+        w = int(
+            pred.get("width",
+            pred.get("w", 0))
+        )
+
+        h = int(
+            pred.get("height",
+            pred.get("h", 0))
+        )
+
+        confidence = pred.get("confidence", 0)
+
+
+        x1 = int(x - w / 2)
+        y1 = int(y - h / 2)
+
+        x2 = int(x + w / 2)
+        y2 = int(y + h / 2)
 
 
         cv2.rectangle(
             frame,
-            (
-                x - w // 2,
-                y - h // 2
-            ),
-            (
-                x + w // 2,
-                y + h // 2
-            ),
+            (x1, y1),
+            (x2, y2),
             (0,255,0),
             3
         )
 
 
-        cv2.putText(
+    cv2.putText(
+        frame,
+        f"Bottle {confidence:.2f}",
+        (x1, y1-10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (0,255,0),
+        2
+    )
+
+
+    cv2.putText(
             frame,
             f"Bottle {confidence:.2f}",
             (
