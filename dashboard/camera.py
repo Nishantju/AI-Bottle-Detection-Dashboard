@@ -253,6 +253,9 @@ print("Camera released")
 
 
 def process_mobile_image(image_path):
+    confidence = 0
+    count = 0
+    status = "No Bottle"
 
     global last_predictions
     global latest_status
