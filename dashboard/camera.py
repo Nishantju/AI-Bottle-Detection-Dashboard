@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 import time
-
+import base64
 from cameras.manager import start_camera as manager_start
 from cameras.manager import stop_camera as manager_stop
 
@@ -256,8 +256,8 @@ def generate_frames():
             + frame +
             b"\r\n"
         )
-stop_camera()
-print("Camera released")
+        stop_camera()
+        print("Camera released")
 
 def process_mobile_image(image_path):
 

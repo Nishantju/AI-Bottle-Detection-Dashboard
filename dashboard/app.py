@@ -23,11 +23,12 @@ import os
 from camera import (
     generate_frames,
     latest_status,
-    mobile_status,
     start_camera,
     stop_camera,
     process_mobile_image
 )
+
+from camera import mobile_status
 
 from cameras.manager import (
     set_camera_source,
