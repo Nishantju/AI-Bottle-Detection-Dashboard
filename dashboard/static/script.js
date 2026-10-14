@@ -140,11 +140,19 @@
 
                         document.getElementById("cameraSource").disabled = true;
 
-                        mobileCaptureInterval = setInterval(() => {
 
-                            captureMobileFrame();
+                        mobileCamera.onloadedmetadata = () => {
 
-                        }, 500);
+                            console.log("Mobile camera ready");
+
+                            mobileCaptureInterval = setInterval(() => {
+
+                                captureMobileFrame();
+
+                            }, 1000);
+
+                        };
+
 
                         return;
 
