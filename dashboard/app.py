@@ -23,6 +23,7 @@ import os
 from camera import (
     generate_frames,
     latest_status,
+    mobile_status,
     start_camera,
     stop_camera,
     process_mobile_image
@@ -78,8 +79,11 @@ def video():
 
 @app.route("/status")
 def status():
-    return jsonify(latest_status)
 
+    if get_camera_source() == "mobile":
+        return jsonify(mobile_status)
+
+    return jsonify(latest_status)
 
 
 @app.route("/camera/source")
@@ -228,8 +232,10 @@ def mobile_frame():
     result = process_mobile_image(image_path)
 
 
+
     return {
         "success": True,
+        "image": result["image"],
         "predictions": result["predictions"],
         "status": result["status"],
         "confidence": result["confidence"],

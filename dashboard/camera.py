@@ -20,12 +20,20 @@ import cv2
 from inference_sdk import InferenceHTTPClient, InferenceConfiguration
 frame_counter = 0
 last_predictions = []
+
+mobile_predictions = []
+
 latest_status = {
     "status": "No Bottle",
     "confidence": 0,
     "count": 0
 }
 
+mobile_status = {
+    "status": "No Bottle",
+    "confidence": 0,
+    "count": 0
+}
 
 latest_frame = None
 frame_lock = threading.Lock()
@@ -251,16 +259,14 @@ def generate_frames():
 stop_camera()
 print("Camera released")
 
-
 def process_mobile_image(image_path):
-    confidence = 0
-    count = 0
-    status = "No Bottle"
 
-    global last_predictions
-    global latest_status
+    global mobile_predictions
+    global mobile_status
 
     frame = cv2.imread(image_path)
+
+    confidence = 0
 
 
     result = client.run_workflow(
@@ -276,6 +282,9 @@ def process_mobile_image(image_path):
     )
 
 
+    predictions = []
+
+
     if result and isinstance(result, list):
 
         output = result[0]
@@ -285,62 +294,46 @@ def process_mobile_image(image_path):
         predictions = prediction_data.get("predictions", [])
 
 
-        last_predictions = [
-            p for p in predictions
-            if p.get("confidence", 0) > 0.70
-            and p.get("class", "").lower() == "bottles"
-        ]
-
-    else:
-        predictions = []
-
-        last_predictions = []
+    # update mobile predictions ONLY
+    mobile_predictions = [
+        p for p in predictions
+        if p.get("confidence", 0) > 0.70
+        and p.get("class", "").lower() == "bottles"
+    ]
 
 
+    # draw boxes
+    for pred in mobile_predictions:
 
-    # Draw green boxes
-    for pred in last_predictions:
+        x = int(pred.get("x",0))
+        y = int(pred.get("y",0))
 
-        x = int(pred.get("x", 0))
-        y = int(pred.get("y", 0))
+        w = int(pred.get("width", pred.get("w",0)))
+        h = int(pred.get("height", pred.get("h",0)))
 
-        w = int(
-            pred.get("width",
-            pred.get("w", 0))
-        )
-
-        h = int(
-            pred.get("height",
-            pred.get("h", 0))
-        )
-
-        confidence = pred.get("confidence", 0)
+        confidence = pred.get("confidence",0)
 
 
-        x1 = int(x - w / 2)
-        y1 = int(y - h / 2)
+        x1 = int(x - w/2)
+        y1 = int(y - h/2)
 
-        x2 = int(x + w / 2)
-        y2 = int(y + h / 2)
+        x2 = int(x + w/2)
+        y2 = int(y + h/2)
 
 
         cv2.rectangle(
             frame,
-            (x1, y1),
-            (x2, y2),
+            (x1,y1),
+            (x2,y2),
             (0,255,0),
             3
         )
 
 
-
-    cv2.putText(
+        cv2.putText(
             frame,
             f"Bottle {confidence:.2f}",
-            (
-                x - w // 2,
-                y - h // 2 - 10
-            ),
+            (x1,y1-10),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,
             (0,255,0),
@@ -348,31 +341,46 @@ def process_mobile_image(image_path):
         )
 
 
+    # update MOBILE status only
+
+    mobile_status["count"] = len(mobile_predictions)
 
 
-    latest_status["count"] = len(last_predictions)
+    if mobile_predictions:
 
+        mobile_status["status"] = "Bottle Detected"
 
-    if last_predictions:
-
-        latest_status["status"] = "Bottle Detected"
-
-        latest_status["confidence"] = round(
-            last_predictions[0]["confidence"] * 100,
+        mobile_status["confidence"] = round(
+            mobile_predictions[0]["confidence"] * 100,
             2
         )
 
     else:
 
-        latest_status["status"] = "No Bottle"
+        mobile_status["status"] = "No Bottle"
 
-        latest_status["confidence"] = 0
+        mobile_status["confidence"] = 0
+
+
+
+    _, buffer = cv2.imencode(".jpg", frame)
+
+    frame_base64 = base64.b64encode(
+        buffer
+    ).decode("utf-8")
 
 
 
     return {
-        "predictions": last_predictions,
-        "status": latest_status["status"],
-        "confidence": latest_status["confidence"],
-        "count": latest_status["count"]
+
+        "image": frame_base64,
+
+        "predictions": mobile_predictions,
+
+        "status": mobile_status["status"],
+
+        "confidence": mobile_status["confidence"],
+
+        "count": mobile_status["count"]
+
     }
