@@ -16,12 +16,13 @@ from flask import (
 import base64
 
 import os
-###change cameras to camera
+
 from camera import (
     generate_frames,
     latest_status,
     start_camera,
-    stop_camera
+    stop_camera,
+    process_mobile_image
 )
 
 from cameras.manager import (
@@ -210,10 +211,22 @@ def mobile_frame():
             "message": "No image received"
         }, 400
 
-    print("Mobile frame received")
+    image = image.split(",")[1]
+
+    image_bytes = base64.b64decode(image)
+
+    image_path = "mobile_frame.jpg"
+
+    with open(image_path, "wb") as f:
+        f.write(image_bytes)
+
+    result = process_mobile_image(image_path)
 
     return {
-        "success": True
+        "success": True,
+        "status": result["status"],
+        "confidence": result["confidence"],
+        "count": result["count"]
     }
 
 

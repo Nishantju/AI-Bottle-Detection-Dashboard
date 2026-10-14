@@ -232,3 +232,56 @@ def generate_frames():
         )
 stop_camera()
 print("Camera released")
+
+
+def process_mobile_image(image_path):
+    global last_predictions
+    global latest_status
+
+    result = client.run_workflow(
+        workspace_name="nishant-kumar-sdkzt",
+        workflow_id=(
+            "ai-bottle-filling-detection-vai-bottle-filling-detection-3-"
+            "rfdetr-nas-t1-14fdc8-logic"
+        ),
+        images={
+            "image": image_path
+        },
+        use_cache=True
+    )
+
+    if result and isinstance(result, list):
+
+        output = result[0]
+
+        prediction_data = output.get("predictions", {})
+
+        predictions = prediction_data.get("predictions", [])
+
+        last_predictions = [
+            p for p in predictions
+            if p.get("confidence", 0) > 0.70
+            and p.get("class", "").lower() == "bottles"
+        ]
+
+    else:
+        last_predictions = []
+
+    latest_status["count"] = len(last_predictions)
+
+    if last_predictions:
+
+        latest_status["status"] = "Bottle Detected"
+
+        latest_status["confidence"] = round(
+            last_predictions[0]["confidence"] * 100,
+            2
+        )
+
+    else:
+
+        latest_status["status"] = "No Bottle"
+
+        latest_status["confidence"] = 0
+
+    return latest_status
