@@ -256,8 +256,6 @@ def generate_frames():
             + frame +
             b"\r\n"
         )
-        stop_camera()
-        print("Camera released")
 
 def process_mobile_image(image_path):
 

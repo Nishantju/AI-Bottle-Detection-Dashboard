@@ -782,11 +782,12 @@ body:not(.dashboard-page) > .footer {
 @media (max-width: 780px) {
     .topbar {
         position: relative;
-        min-height: auto;
-        flex-wrap: wrap;
-        gap: 13px;
-        padding-top: 13px;
-        padding-bottom: 13px;
+        display: grid;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px 12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
     }
 
     .topbar-logo {
@@ -801,12 +802,26 @@ body:not(.dashboard-page) > .footer {
         min-width: 0;
     }
 
+    .brand-logo {
+        width: 68px;
+        height: 48px;
+    }
+
     .menu {
         position: static;
         width: 100%;
+        min-width: 0;
+        grid-column: 1 / -1;
+        grid-row: 2;
         justify-content: center;
         overflow-x: auto;
         transform: none;
+    }
+
+    .social-links {
+        grid-column: 2;
+        grid-row: 1;
+        gap: 8px;
     }
 
     .menu a {
@@ -852,6 +867,23 @@ body:not(.dashboard-page) > .footer {
     .topbar-logo {
         width: 56px;
         height: 40px;
+    }
+
+    .brand-logo {
+        width: 58px;
+        height: 42px;
+    }
+
+    .menu {
+        gap: 2px;
+        overflow-x: visible;
+    }
+
+    .menu a {
+        flex: 1 1 0;
+        padding: 8px 4px;
+        font-size: 11px;
+        text-align: center;
     }
 
     .dashboard-main {
