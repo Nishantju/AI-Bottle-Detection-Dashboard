@@ -243,6 +243,54 @@ def mobile_frame():
         "count": result["count"]
     }
 
+@app.route("/camera/droid/url", methods=["POST"])
+def set_droid_url():
+
+    data = request.json
+
+    url = data.get("url")
+
+    if not url:
+        return {
+            "success": False,
+            "message": "DroidCam URL missing"
+        },400
+
+
+    from cameras.manager import set_droidcam_url
+
+    set_droidcam_url(url)
+
+
+    return {
+        "success": True
+    }
+
+@app.route("/camera/ip/url", methods=["POST"])
+def set_ip_url():
+
+    data = request.json
+
+    url = data.get("url")
+
+
+    if not url:
+
+        return {
+            "success": False,
+            "message": "IP Camera URL missing"
+        }, 400
+
+
+
+    from cameras.manager import set_ipcam_url
+
+    set_ipcam_url(url)
+
+
+    return {
+        "success": True
+    }
 
 if __name__ == "__main__":
     app.run(

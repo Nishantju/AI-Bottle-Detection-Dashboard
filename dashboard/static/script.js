@@ -75,6 +75,37 @@
 
             const source = document.getElementById("cameraSource").value;
 
+
+            const droidSettings =
+                document.getElementById("droidSettings");
+
+            const ipSettings =
+                document.getElementById("ipSettings");
+
+
+            if (source === "droidcam") {
+
+                droidSettings.style.display = "block";
+
+            }
+            else {
+
+                droidSettings.style.display = "none";
+
+            }
+
+            if (source === "ipcamera") {
+
+                ipSettings.style.display = "block";
+
+            }
+            else {
+
+                ipSettings.style.display = "none";
+
+            }
+
+
             try {
 
                 const response = await fetch(`/camera/source/${source}`);
@@ -174,6 +205,121 @@
                         return;
                     }
                 }
+
+
+                if (source === "droidcam") {
+
+                    let url =
+                        document.getElementById("droidUrl").value.trim();
+
+
+                    // Add protocol if missing
+                    if (!url.startsWith("http")) {
+
+                        url = "http://" + url;
+
+                    }
+
+
+                    // Add DroidCam stream path if missing
+                    if (!url.includes(":4747")) {
+
+                        url = url + ":4747";
+
+                    }
+
+
+                    if (!url.endsWith("/video")) {
+
+                        url = url + "/video";
+
+                    }
+
+
+                    // Update input box also
+                    document.getElementById("droidUrl").value = url;
+
+
+                    const response =
+                        await fetch("/camera/droid/url", {
+
+                            method:"POST",
+
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+
+                            body:JSON.stringify({
+                                url:url
+                            })
+
+                        });
+
+
+                    const data = await response.json();
+
+
+                    if (!data.success) {
+
+                        alert(data.message);
+
+                        return;
+
+                    }
+
+                }
+
+
+
+                if (source === "ipcamera") {
+
+                    let url =
+                        document.getElementById("ipUrl").value.trim();
+
+
+                    if (!url) {
+
+                        alert("Enter IP Camera URL");
+
+                        return;
+
+                    }
+
+
+                    const response =
+                        await fetch("/camera/ip/url", {
+
+                            method:"POST",
+
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+
+                            body:JSON.stringify({
+                                url:url
+                            })
+
+                        });
+
+
+                    const data = await response.json();
+
+
+                    if (!data.success) {
+
+                        alert(data.message);
+
+                        return;
+
+                    }
+
+                }
+
+
+
+
+
+
 
 
 
@@ -545,8 +691,14 @@
         setCameraState(false);
 
 
+        const cameraSource = document.getElementById("cameraSource");
 
+        const isMobile =
+            /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+        cameraSource.value = isMobile ? "mobile" : "webcam";
+
+        
 
         const lastImage = sessionStorage.getItem("lastImage");
 

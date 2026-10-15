@@ -119,13 +119,12 @@
                         <label for="cameraSource">Camera Source</label>
 
                         <select id="cameraSource" onchange="changeCameraSource()">
-
-                            <option value="webcam" selected>
-                                💻 Laptop Webcam
-                            </option>
-
                             <option value="mobile">
                                 📱 Mobile Browser
+                            </option>
+
+                            <option value="webcam">
+                                💻 Laptop Webcam
                             </option>
 
                             <option value="droidcam">
@@ -136,7 +135,39 @@
                                 🌐 IP Camera
                             </option>
 
+                            
+
+                            
                         </select>
+                    </div>
+
+                    <div id="droidSettings" class="camera-selector" style="display:none;">
+
+                        <label for="droidUrl">
+                            DroidCam Device IP
+                        </label>
+
+                        <input
+                            id="droidUrl"
+                            type="text"
+                            placeholder="50.873.712.904"
+                        >
+
+                    </div>
+
+
+                    <div id="ipSettings" class="camera-selector" style="display:none;">
+
+                        <label for="ipUrl">
+                            IP Camera URL
+                        </label>
+
+                        <input
+                            id="ipUrl"
+                            type="text"
+                            placeholder="rtsp://192.168.x.x:554/stream"
+                        >
+
                     </div>
 
 

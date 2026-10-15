@@ -442,6 +442,36 @@ h1 {
     transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
+.camera-selector input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0 13px;
+    border: 1px solid #39495c;
+    border-radius: 10px;
+    background: #151f2c;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.camera-selector input::placeholder {
+    color: #78899d;
+    opacity: 1;
+}
+
+.camera-selector input:hover {
+    border-color: #68798e;
+    background: #1b2938;
+}
+
+.camera-selector input:focus-visible {
+    border-color: var(--blue);
+    outline: 2px solid rgba(99, 169, 255, 0.55);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(99, 169, 255, 0.12);
+}
+
 .camera-selector select:hover:not(:disabled) {
     border-color: #68798e;
     background-color: #1b2938;
@@ -1015,5 +1045,9 @@ body:not(.dashboard-page) > .footer {
 
 }
 .processing-overlay[hidden]{
+    display:none;
+}
+
+#droidSettings {
     display:none;
 }

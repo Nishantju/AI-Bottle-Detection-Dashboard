@@ -1,6 +1,11 @@
 from .webcam import start as webcam_start
 from .webcam import stop as webcam_stop
-
+from .droidcam import start_camera as droid_start
+from .droidcam import stop_camera as droid_stop
+from .droidcam import set_droidcam_url
+from .ipcam import start_camera as ip_start
+from .ipcam import stop_camera as ip_stop
+from .ipcam import set_ipcam_url
 CURRENT_CAMERA = "webcam"
 
 
@@ -30,13 +35,13 @@ def start_camera():
         return webcam_start()
 
     elif CURRENT_CAMERA == "droidcam":
-        raise NotImplementedError("DroidCam not implemented yet")
+        return droid_start()
 
     elif CURRENT_CAMERA == "mobile":
         raise NotImplementedError("Mobile camera not implemented yet")
 
     elif CURRENT_CAMERA == "ipcamera":
-        raise NotImplementedError("IP Camera not implemented yet")
+        return ip_start()
 
     raise ValueError("Unknown camera source")
 
@@ -46,3 +51,13 @@ def stop_camera():
     if CURRENT_CAMERA == "webcam":
         webcam_stop()
         return
+
+
+    elif CURRENT_CAMERA == "droidcam":
+        droid_stop()
+        return
+
+    elif CURRENT_CAMERA == "ipcamera":
+        ip_stop()
+        return
+        

@@ -85,6 +85,7 @@ def inference_worker():
     global latest_status
     global last_saved_status
     global worker_running
+    global frame_counter
 
     while worker_running:
 
@@ -98,7 +99,21 @@ def inference_worker():
             time.sleep(0.05)
             continue
 
-        cv2.imwrite("current_frame.jpg", frame)
+
+        frame_counter += 1
+        if frame_counter % 5 != 0:
+            continue
+
+
+        small_frame = cv2.resize(
+            frame,
+            (640,480)
+        )
+
+        cv2.imwrite(
+            "current_frame.jpg",
+            small_frame
+        )
 
         start = time.time()
 
@@ -263,6 +278,19 @@ def process_mobile_image(image_path):
     global mobile_status
 
     frame = cv2.imread(image_path)
+
+
+    frame = cv2.resize(
+        frame,
+        (640,480)
+    )
+
+
+    cv2.imwrite(
+        image_path,
+        frame
+    )
+
 
     confidence = 0
 
