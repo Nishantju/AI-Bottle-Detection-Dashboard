@@ -8,6 +8,8 @@ from cameras.manager import stop_camera as manager_stop
 import threading
 
 
+
+
 # Allow importing from the project root
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -17,7 +19,10 @@ from dashboard.database.services import save_detection
 
 import os
 import cv2
-from inference_sdk import InferenceHTTPClient, InferenceConfiguration
+from ultralytics import YOLO
+model = YOLO("models/best.pt")
+
+
 frame_counter = 0
 last_predictions = []
 
@@ -69,14 +74,6 @@ def stop_camera():
     camera = None
 
 
-client = InferenceHTTPClient(
-    api_url=os.getenv("ROBOFLOW_API_URL"),
-    api_key=os.getenv("ROBOFLOW_API_KEY")
-).configure(
-    InferenceConfiguration(
-        api_key_transport="header"
-    )
-)
 
 
 def inference_worker():
@@ -101,56 +98,66 @@ def inference_worker():
 
 
         frame_counter += 1
-        if frame_counter % 5 != 0:
+        if frame_counter % 10 != 0:
             continue
 
 
-        small_frame = cv2.resize(
-            frame,
-            (640,480)
-        )
+        small_frame = frame
 
         cv2.imwrite(
             "current_frame.jpg",
             small_frame
         )
 
-        start = time.time()
+        workflow_start = time.time()
 
-        result = client.run_workflow(
-            workspace_name="nishant-kumar-sdkzt",
-            workflow_id=(
-                "ai-bottle-filling-detection-vai-bottle-filling-detection-3-"
-                "rfdetr-nas-t1-14fdc8-logic"
-            ),
-            images={
-                "image": "current_frame.jpg"
-            },
-            use_cache=True
+        yolo_start = time.time()
+
+        results = model(
+            small_frame,
+            device=0,
+            verbose=False
+        )
+        print("YOLO completed")
+
+        yolo_time = time.time() - yolo_start
+
+        print(
+            f"YOLO inference time: {yolo_time:.3f} seconds"
         )
 
-        print(f"workflow took {time.time()-start:.2f} seconds")
+        predictions = []
 
-        if result and isinstance(result, list):
+        for r in results:
+            for box in r.boxes:
 
-            output = result[0]
+                confidence = float(box.conf[0].item())
 
-            prediction_data = output.get("predictions", {})
+                if confidence > 0.40:
 
-            predictions = prediction_data.get("predictions", [])
+                    x1, y1, x2, y2 = map(
+                        int,
+                        box.xyxy[0].tolist()
+                    )
 
-            with prediction_lock:
-                last_predictions = [
-                    pred
-                    for pred in predictions
-                    if pred.get("confidence", 0) > 0.70
-                    and pred.get("class", "").lower() == "bottles"
-                ]
-            print("filtered box data")
-            print(last_predictions)
 
-        else:
-            last_predictions = []
+                    predictions.append({
+                        "x": int(((x1+x2)//2) * scale_x),
+                        "y": int(((y1+y2)//2) * scale_y),
+                        "width": int((x2-x1) * scale_x),
+                        "height": int((y2-y1) * scale_y),
+                        "confidence": confidence,
+                        "class": "bottle"
+                    })
+                    print("Bottle found:", confidence)
+
+
+        print(
+            f"workflow took {time.time()-workflow_start:.3f} seconds"
+        )
+
+        with prediction_lock:
+            last_predictions = predictions
 
         latest_status["count"] = len(last_predictions)
 
@@ -249,7 +256,7 @@ def generate_frames():
                 (x1, y1),
                 (x2, y2),
                 (0,255,0),
-                3
+                2
             )
 
             cv2.putText(
@@ -282,7 +289,7 @@ def process_mobile_image(image_path):
 
     frame = cv2.resize(
         frame,
-        (640,480)
+        (320,320)
     )
 
 
@@ -295,17 +302,7 @@ def process_mobile_image(image_path):
     confidence = 0
 
 
-    result = client.run_workflow(
-        workspace_name="nishant-kumar-sdkzt",
-        workflow_id=(
-            "ai-bottle-filling-detection-vai-bottle-filling-detection-3-"
-            "rfdetr-nas-t1-14fdc8-logic"
-        ),
-        images={
-            "image": image_path
-        },
-        use_cache=False
-    )
+    result =  []
 
 
     predictions = []

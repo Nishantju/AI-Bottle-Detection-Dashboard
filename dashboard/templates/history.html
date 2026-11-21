@@ -52,11 +52,11 @@
     {% for row in detections %}
 
     <tr>
-        <td>{{ row[0] }}</td>
-        <td>{{ row[1] }}</td>
-        <td>{{ row[2] }}</td>
-        <td>{{ row[3] }} %</td>
-        <td>{{ row[4] }}</td>
+        <td>{{ row.id }}</td>
+        <td>{{ row.detected_at }}</td>
+        <td>{{ row.status }}</td>
+        <td>{{ row.confidence }} %</td>
+        <td>{{ row.bottle_count }}</td>
     </tr>
 
     {% endfor %}
@@ -68,7 +68,7 @@
 
 
 <div class="footer">
-    Flask • OpenCV • Roboflow • YOLO26 • SQLite
+    Flask • OpenCV • Ultralytics YOLO • SQLite
 </div>
 
 </body>

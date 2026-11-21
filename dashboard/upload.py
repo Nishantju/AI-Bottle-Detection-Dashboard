@@ -1,20 +1,13 @@
 import os
 import time
 import cv2
-from camera import latest_status
-from inference_sdk import (
-    InferenceHTTPClient,
-    InferenceConfiguration
-)
 
-client = InferenceHTTPClient(
-    api_url=os.getenv("ROBOFLOW_API_URL"),
-    api_key=os.getenv("ROBOFLOW_API_KEY")
-).configure(
-    InferenceConfiguration(
-        api_key_transport="header"
-    )
-)
+from ultralytics import YOLO
+
+from camera import latest_status
+
+
+model = YOLO("models/best.pt")
 
 def process_image(image_path):
     start_total = time.time()
@@ -49,35 +42,36 @@ def process_image(image_path):
 
 
 
+    result = []
 
-    result = client.run_workflow(
-        workspace_name="nishant-kumar-sdkzt",
-        workflow_id=(
-            "ai-bottle-filling-detection-vai-bottle-filling-detection-3-"
-            "rfdetr-nas-t1-14fdc8-logic"
-        ),
-        images={
-            "image": image_path
-        },
-        use_cache=True
-    )
-    print(f"Roboflow workflow: {time.time() - workflow_start:.2f} sec")
+    print(f"Inference: {time.time() - workflow_start:.2f} sec")
 
     image = cv2.imread(image_path)
     print(f"Read image: {time.time() - start_total:.2f} sec")
 
     predictions = []
 
-    if result and isinstance(result, list):
+    results = model(image)
 
-        output = result[0]
+    for r in results:
+        for box in r.boxes:
 
-        prediction_data = output.get("predictions", {})
+            confidence = float(box.conf[0])
 
-        predictions = prediction_data.get(
-            "predictions",
-            []
-        )
+            if confidence > 0.25:
+
+                x1, y1, x2, y2 = map(
+                    int,
+                    box.xyxy[0]
+                )
+
+                predictions.append({
+                    "x": (x1 + x2) // 2,
+                    "y": (y1 + y2) // 2,
+                    "width": x2 - x1,
+                    "height": y2 - y1,
+                    "confidence": confidence
+                })
     if len(predictions) > 0:
     
         latest_status["status"] = "Bottle Detected"
