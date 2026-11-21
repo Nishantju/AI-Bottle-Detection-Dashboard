@@ -1,7 +1,8 @@
 # Environment variables
 .env
-
+*.db
 # Python virtual environments
+.venv311/
 .venv312/
 venv/
 env/

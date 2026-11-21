@@ -13,7 +13,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.append(str(PROJECT_ROOT))
 
-from dashboard.database.database import save_detection
+from dashboard.database.services import save_detection
 
 import os
 import cv2

@@ -39,14 +39,22 @@ from cameras.manager import (
 from upload import process_image
 
 from dashboard.database.database import (
+    configure_database,
+    db
+)
+
+from dashboard.database.models import DetectionHistory
+
+from dashboard.database.services import (
     get_detections,
     get_statistics,
     get_chart_data
 )
 
-
-
 app = Flask(__name__)
+
+configure_database(app)
+
 
 UPLOAD_FOLDER = "uploads"
 
@@ -291,6 +299,12 @@ def set_ip_url():
     return {
         "success": True
     }
+
+with app.app_context():
+    db.create_all()
+
+
+
 
 if __name__ == "__main__":
     app.run(
