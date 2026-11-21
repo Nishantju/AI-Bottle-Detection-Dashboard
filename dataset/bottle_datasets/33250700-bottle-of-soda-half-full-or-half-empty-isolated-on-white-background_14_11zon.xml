@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>33250700-bottle-of-soda-half-full-or-half-empty-isolated-on-white-background_14_11zon.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\33250700-bottle-of-soda-half-full-or-half-empty-isolated-on-white-background_14_11zon.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>866</width>
+		<height>1300</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>170</xmin>
+			<ymin>18</ymin>
+			<xmax>691</xmax>
+			<ymax>1257</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>212538-shutterstock1379350706-1_43_11zon.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\212538-shutterstock1379350706-1_43_11zon.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1200</width>
+		<height>798</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>268</xmin>
+			<ymin>21</ymin>
+			<xmax>1140</xmax>
+			<ymax>798</ymax>
+		</bndbox>
+	</object>
+</annotation>

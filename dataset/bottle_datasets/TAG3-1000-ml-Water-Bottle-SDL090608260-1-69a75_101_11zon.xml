@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>TAG3-1000-ml-Water-Bottle-SDL090608260-1-69a75_101_11zon.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\TAG3-1000-ml-Water-Bottle-SDL090608260-1-69a75_101_11zon.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>620</width>
+		<height>726</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>168</xmin>
+			<ymin>24</ymin>
+			<xmax>452</xmax>
+			<ymax>726</ymax>
+		</bndbox>
+	</object>
+</annotation>

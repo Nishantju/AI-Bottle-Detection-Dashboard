@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>water-bottles-1595227213-5525879.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\water-bottles-1595227213-5525879.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>480</width>
+		<height>552</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>93</xmin>
+			<ymin>9</ymin>
+			<xmax>385</xmax>
+			<ymax>547</ymax>
+		</bndbox>
+	</object>
+</annotation>

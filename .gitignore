@@ -1,7 +1,12 @@
 # Environment variables
 .env
+
+# Database
 *.db
+instance/
+
 # Python virtual environments
+.venv/
 .venv311/
 .venv312/
 venv/
@@ -10,24 +15,29 @@ roboflow_env/
 
 # Python cache
 __pycache__/
+*.pyc
 *.py[cod]
 
 # VS Code
 .vscode/
 
 # Uploads
+uploads/
 dashboard/uploads/**
 !dashboard/uploads/.gitkeep
 
-# Generated results
+# Generated detection results
 dashboard/static/results/**
 !dashboard/static/results/.gitkeep
 
-# OS files
-Thumbs.db
-.DS_Store
+# Temporary images
+current_frame.jpg
+mobile_frame.jpg
+dashboard/current_frame.jpg
 
 # Logs
 *.log
 
-dashboard/current_frame.jpg
+# OS files
+Thumbs.db
+.DS_Store

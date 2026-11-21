@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>4-41984_aquafina-water-bottle-png-bisleri-mineral-water-2ltr.png</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\4-41984_aquafina-water-bottle-png-bisleri-mineral-water-2ltr.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>820</width>
+		<height>698</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>119</xmin>
+			<ymin>12</ymin>
+			<xmax>708</xmax>
+			<ymax>671</ymax>
+		</bndbox>
+	</object>
+</annotation>

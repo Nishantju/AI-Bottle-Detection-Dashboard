@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>blue-plastic-water-bottle-lying-on-glass-shelf-half-full-or-half-empty-J1BYWJ_26_11zon.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\blue-plastic-water-bottle-lying-on-glass-shelf-half-full-or-half-empty-J1BYWJ_26_11zon.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1300</width>
+		<height>956</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>96</xmin>
+			<ymin>191</ymin>
+			<xmax>1279</xmax>
+			<ymax>659</ymax>
+		</bndbox>
+	</object>
+</annotation>

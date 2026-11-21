@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>rbonated-water-water-body-plastic-bottle-drinking-water-pepsi-bottling-group.png</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\rbonated-water-water-body-plastic-bottle-drinking-water-pepsi-bottling-group.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>920</width>
+		<height>861</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>293</xmin>
+			<ymin>15</ymin>
+			<xmax>645</xmax>
+			<ymax>861</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>bisleri-packaged-drinking-water-500-ml-product-images-o490007752-p490007752-0-202203170614_82_11zon.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\bisleri-packaged-drinking-water-500-ml-product-images-o490007752-p490007752-0-202203170614_82_11zon.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>600</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>105</xmin>
+			<ymin>15</ymin>
+			<xmax>375</xmax>
+			<ymax>594</ymax>
+		</bndbox>
+	</object>
+</annotation>

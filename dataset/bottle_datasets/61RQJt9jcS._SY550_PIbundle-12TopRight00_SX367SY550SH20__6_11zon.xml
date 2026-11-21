@@ -1,0 +1,26 @@
+<annotation>
+	<folder>bottle_datasets</folder>
+	<filename>61RQJt9jcS._SY550_PIbundle-12TopRight00_SX367SY550SH20__6_11zon.jpeg</filename>
+	<path>C:\Users\NISHANT KUMAR\OneDrive\Desktop\AI Bottle Detection\dataset\bottle_datasets\61RQJt9jcS._SY550_PIbundle-12TopRight00_SX367SY550SH20__6_11zon.jpeg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>367</width>
+		<height>550</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bottle</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>59</xmin>
+			<ymin>32</ymin>
+			<xmax>302</xmax>
+			<ymax>487</ymax>
+		</bndbox>
+	</object>
+</annotation>
