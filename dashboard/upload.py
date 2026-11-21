@@ -114,11 +114,17 @@ def process_image(image_path):
             2
         )
 
+    os.makedirs(
+        "static/results",
+        exist_ok=True
+    )
+
     output_path = os.path.join(
         "static",
         "results",
         "result.jpg"
     )
+    
 
     cv2.imwrite(
         output_path,
