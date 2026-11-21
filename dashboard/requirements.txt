@@ -5,4 +5,4 @@ flask
 flask-sqlalchemy
 gunicorn
 python-dotenv
-psycopg2-binary
+psycopg[binary]
