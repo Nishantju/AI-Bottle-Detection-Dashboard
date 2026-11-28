@@ -1,8 +1,0 @@
-ultralytics
-opencv-python-headless
-numpy
-flask
-flask-sqlalchemy
-gunicorn
-python-dotenv
-psycopg[binary]
