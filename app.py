@@ -46,6 +46,7 @@ from database.database import (
 from database.models import DetectionHistory
 
 from database.services import (
+    save_detection,
     get_detections,
     get_statistics,
     get_chart_data
@@ -194,6 +195,11 @@ def upload():
     if filename.endswith(image_extensions):
 
         result_path = process_image(filepath)
+        save_detection(
+        status=latest_status["status"],
+        confidence=latest_status["confidence"],
+        bottle_count=latest_status["count"]
+    )
 
 
     else:
