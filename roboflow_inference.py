@@ -12,12 +12,21 @@ API_KEY = os.getenv("ROBOFLOW_API_KEY")
 WORKSPACE = os.getenv("ROBOFLOW_WORKSPACE")
 WORKFLOW_ID = os.getenv("ROBOFLOW_WORKFLOW_ID")
 
+# Validate environment variables
 if not API_KEY:
     raise ValueError("ROBOFLOW_API_KEY missing from .env")
 
+if not WORKSPACE:
+    raise ValueError("ROBOFLOW_WORKSPACE missing from .env")
+
+if not WORKFLOW_ID:
+    raise ValueError("ROBOFLOW_WORKFLOW_ID missing from .env")
+
+
+# Initialize Roboflow client
 client = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
-    api_key="V1bwqugzfPo3ygUXYDHL"
+    api_key=API_KEY
 ).configure(
     InferenceConfiguration(
         api_key_transport="header"
